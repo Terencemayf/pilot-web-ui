@@ -15,12 +15,12 @@ const displayMessages = computed(() =>
 
 const currentToolCalls = computed(() => {
   const msgs = chatStore.messages
-  // Find the last user message index
+
   let lastUserIdx = -1
   for (let i = msgs.length - 1; i >= 0; i--) {
     if (msgs[i].role === 'user') { lastUserIdx = i; break }
   }
-  // Only tool calls after the last user message, newest on top
+
   const tools = msgs.filter((m, i) => m.role === 'tool' && i > lastUserIdx)
   return [...tools].reverse()
 })

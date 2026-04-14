@@ -39,7 +39,7 @@
   --msg-system-border: #3f3f46;
   --code-bg: #0c0c0e;
 
-  /* Force all Naive UI inputs to be dark */
+
   .n-input, .n-input__input-el, .n-base-selection, .n-base-selection-item {
     background-color: var(--bg-input) !important;
     color: var(--text-primary) !important;
@@ -52,7 +52,7 @@
     border-color: var(--border-color) !important;
   }
 
-  /* Fix for "strange white" tags (e.g. "Not configured") */
+
   .n-tag {
     --n-color: var(--bg-card) !important;
     --n-text-color: var(--text-secondary) !important;

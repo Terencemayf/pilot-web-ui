@@ -13,7 +13,7 @@ const updateTheme = () => {
   currentThemeOverrides.value = getThemeOverrides()
 }
 
-// Listen for the custom event from AppSidebar.vue
+
 if (typeof window !== 'undefined') {
   window.addEventListener('theme-changed', updateTheme)
 }

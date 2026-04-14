@@ -1,6 +1,6 @@
 import type { GlobalThemeOverrides } from 'naive-ui'
 
-// ☀️ Light Theme - Pure Ink (original)
+
 export const lightThemeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#333333',
@@ -71,7 +71,7 @@ export const lightThemeOverrides: GlobalThemeOverrides = {
   },
 }
 
-// 🌙 Dark Theme - Linear-grade Professional
+
 export const darkThemeOverrides: GlobalThemeOverrides = {
   common: {
     primaryColor: '#6366f1',
@@ -142,19 +142,19 @@ export const darkThemeOverrides: GlobalThemeOverrides = {
   },
 }
 
-// Exporta o tema ativo baseado em preferência do sistema ou armazenada
+
 export const getThemeOverrides = (): GlobalThemeOverrides => {
-  // Tenta obter do localStorage
+
   const savedTheme = localStorage.getItem('hermes-theme')
   if (savedTheme === 'dark' || savedTheme === 'light') {
     return savedTheme === 'dark' ? darkThemeOverrides : lightThemeOverrides
   }
 
-  // Verifica preferência do sistema
+
   if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
     return darkThemeOverrides
   }
 
-  // Padrão: light theme (mantém compatibilidade)
+
   return lightThemeOverrides
 }

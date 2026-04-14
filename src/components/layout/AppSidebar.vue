@@ -65,18 +65,18 @@ function handleNav(key: string) {
 }
 
 const toggleTheme = () => {
-  const currentTheme = localStorage.getItem('hermes-theme') || 
+  const currentTheme = localStorage.getItem('hermes-theme') ||
     (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
   const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
   localStorage.setItem('hermes-theme', newTheme)
-  
-  // Update the HTML attribute immediately
+
+
   document.documentElement.setAttribute('data-theme', newTheme)
-  
-  // Since we are using a global getThemeOverrides() in App.vue, 
-  // we need to trigger a re-render of the NConfigProvider.
-  // In a real app, we'd use a store or an event bus.
-  // For now, we can reload the page or use a simple window event.
+
+
+
+
+
   window.dispatchEvent(new Event('theme-changed'))
 }
 </script>
