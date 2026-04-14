@@ -16,13 +16,35 @@ const selectedKey = computed(() => route.name as string)
 function handleNav(key: string) {
   router.push({ name: key })
 }
+
+const toggleTheme = () => {
+  const currentTheme = localStorage.getItem('hermes-theme') || 
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+  localStorage.setItem('hermes-theme', newTheme)
+  
+  // Update the HTML attribute immediately
+  document.documentElement.setAttribute('data-theme', newTheme)
+  
+  // Since we are using a global getThemeOverrides() in App.vue, 
+  // we need to trigger a re-render of the NConfigProvider.
+  // In a real app, we'd use a store or an event bus.
+  // For now, we can reload the page or use a simple window event.
+  window.dispatchEvent(new Event('theme-changed'))
+}
 </script>
 
 <template>
   <aside class="sidebar">
     <div class="sidebar-logo" @click="router.push('/')">
       <img src="/assets/logo.png" alt="Hermes" class="logo-img" />
-      <span class="logo-text">Hermes</span>
+          <div class="logo-container">
+        <span class="logo-text">Hermes</span>
+        <button class="theme-toggle" @click="toggleTheme" title="Toggle Theme">
+          <svg class="sun-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/><line x1="12" y1="4.22" x2="12" y2="5.64"/><line x1="12" y1="18.36" x2="12" y2="19.78"/></svg>
+          <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
     </div>
 
     <nav class="sidebar-nav">
@@ -166,6 +188,51 @@ function handleNav(key: string) {
   height: 28px;
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.theme-toggle {
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: $text-secondary;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(0,0,0,0.1);
+    color: $text-primary;
+  }
+
+  .sun-icon { display: none; }
+  .moon-icon { display: block; }
+}
+
+[data-theme='dark'] .theme-toggle {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: $text-secondary;
+
+  &:hover {
+    background: rgba(255,255,255,0.1);
+    color: $text-primary;
+  }
+
+  .sun-icon { display: block; }
+  .moon-icon { display: none; }
 }
 
 .sidebar-logo {

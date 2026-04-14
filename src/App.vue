@@ -1,14 +1,34 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { NConfigProvider, NMessageProvider, NDialogProvider, NNotificationProvider } from 'naive-ui'
-import { themeOverrides } from '@/styles/theme'
+import { themeOverrides, getThemeOverrides } from '@/styles/theme'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import { useKeyboard } from '@/composables/useKeyboard'
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()
+const currentThemeOverrides = ref(getThemeOverrides())
+
+const updateTheme = () => {
+  currentThemeOverrides.value = getThemeOverrides()
+}
+
+// Listen for the custom event from AppSidebar.vue
+if (typeof window !== 'undefined') {
+  window.addEventListener('theme-changed', updateTheme)
+}
+
+
+const syncThemeAttribute = () => {
+  const theme = localStorage.getItem('hermes-theme')
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  const activeTheme = theme === 'dark' || (!theme && prefersDark) ? 'dark' : 'light'
+  document.documentElement.setAttribute('data-theme', activeTheme)
+}
+
 
 onMounted(() => {
+  syncThemeAttribute()
   appStore.loadModels()
   appStore.startHealthPolling()
 })
@@ -21,7 +41,7 @@ useKeyboard()
 </script>
 
 <template>
-  <NConfigProvider :theme-overrides="themeOverrides">
+  <NConfigProvider :theme-overrides="currentThemeOverrides">
     <NMessageProvider>
       <NDialogProvider>
         <NNotificationProvider>

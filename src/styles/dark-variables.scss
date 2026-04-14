@@ -1,0 +1,75 @@
+// 🌙 Nocturne — Tema Dark Elegante
+// Inspirado em Linear, Arc e Notion com glassmorphism e refinamento extremo
+
+// Backgrounds - Tons escuros profundos com profundidade
+$bg-primary: #0a0a0a;          // Fundo principal quase preto
+$bg-secondary: #111111;        // Levemente mais claro para camadas
+$bg-sidebar: #0f0f0f;          // Barra lateral
+$bg-card: rgba(17, 17, 17, 0.6); // Cards com translúcido (glassmorphism)
+$bg-card-hover: rgba(25, 25, 25, 0.7); // Hover em cards
+$bg-input: rgba(25, 25, 25, 0.5); // Inputs
+$bg-input-focus: rgba(35, 35, 35, 0.6); // Input focado
+
+// Borders - Sutis e luminosos
+$border-color: rgba(255, 255, 255, 0.08); // Borda muito sutil
+$border-light: rgba(255, 255, 255, 0.04); // Borda ainda mais sutil
+$border-accent: rgba(100, 110, 255, 0.3); // Borda de acento suave
+
+// Accent - Azul elétrico suave e outras cores acentuadas
+$accent-primary: #646eff;        // Azul elétrico suave (naive-ui primary)
+$accent-primary-light: #8a8aff;  // Variante mais clara
+$accent-primary-dark: #4d4dff;   // Variante mais escura
+$accent-hover: #4d4dff;          // Hover no accent
+$accent-muted: rgba(100, 110, 255, 0.2); // Accent suave
+
+// Cores de status adaptadas para dark
+$success: #3fb950;               // Verde vibrante
+$error: #f97316;                 // Laranja vibrante (melhor visibilidade em dark)
+$warning: #fbbf24;               // Amarelo dourado
+$info: $accent-primary;
+
+// Message bubbles - Adaptados para dark com glassmorphism
+$msg-user-bg: rgba(100, 110, 255, 0.15);     // Bolha do usuário com azul suave
+$msg-assistant-bg: rgba(255, 255, 255, 0.05); // Bolha do assistente quase transparente
+$msg-system-border: rgba(100, 110, 255, 0.2); // Borda do sistema
+
+// Code - Tema dark para código
+$code-bg: rgba(0, 0, 0, 0.3);
+$code-color: #e0e0ff;
+
+// Text - Tons claros para leggibilidade em dark
+$text-primary: #e0e0ff;          // Texto principal levemente azulado
+$text-secondary: #a0a0c0;        // Texto secundário
+$text-muted: #6b6b80;            // Texto muted
+$text-on-accent: #ffffff;        // Texto sobre accent
+
+// Typography - Mantendo as fontes elegantes
+$font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+$font-code: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+
+// Layout
+$sidebar-width: 240px;
+$sidebar-collapsed-width: 64px;
+$header-height: 56px;
+
+// Radius - Cantos levemente arredondados para suavidade
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 14px;
+$radius-xl: 20px;
+
+// Transition - Animações suaves e naturais
+$transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+$transition-slow: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+// Shadows - Elevação suave para profundidade
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -3px rgba(0, 0, 0, 0.2);
+
+// Glassmorphism - Efeito de vidro fosco
+$glass-bg: rgba(25, 25, 35, 0.4);
+$glass-border: rgba(255, 255, 255, 0.1);
+$glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
