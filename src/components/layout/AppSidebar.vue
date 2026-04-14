@@ -407,7 +407,7 @@ const toggleTheme = () => {
   margin: 0 -12px;
   color: $text-primary;
   cursor: pointer;
-  background-color: #ffffff;
+  background-color: var(--bg-sidebar);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: relative;
   overflow: hidden;
