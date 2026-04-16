@@ -5,6 +5,7 @@ import { configRoutes } from './config'
 import { fsRoutes } from './filesystem'
 import { logRoutes } from './logs'
 import { pipelineRoutes } from './pipeline'
+import { projectRoutes } from './projects'
 import { weixinRoutes } from './weixin'
 import { proxyRoutes, proxyMiddleware } from './proxy'
 import { setupTerminalWebSocket } from './terminal'
@@ -18,6 +19,7 @@ pilotRoutes.use(configRoutes.routes())
 pilotRoutes.use(fsRoutes.routes())
 pilotRoutes.use(logRoutes.routes())
 pilotRoutes.use(pipelineRoutes.routes())
+pilotRoutes.use(projectRoutes.routes())
 pilotRoutes.use(weixinRoutes.routes())
 pilotRoutes.use(proxyRoutes.routes())
 

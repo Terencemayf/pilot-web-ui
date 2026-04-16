@@ -12,20 +12,42 @@ const route = useRoute();
 const router = useRouter();
 const appStore = useAppStore();
 const canvasRef = ref<HTMLCanvasElement>();
-const editingDir = ref(false);
-const dirInput = ref(appStore.projectDir);
+const showProjectPicker = ref(false);
+const projects = ref<Array<{ name: string; path: string; hasGit: boolean }>>([]);
+const loadingProjects = ref(false);
 
-function saveDir() {
-  appStore.setProjectDir(dirInput.value.trim());
-  editingDir.value = false;
+import { fetchProjects } from "@/api/pilot/projects";
+
+async function openProjectPicker() {
+  showProjectPicker.value = !showProjectPicker.value;
+  if (showProjectPicker.value && projects.value.length === 0) {
+    loadingProjects.value = true;
+    try {
+      const res = await fetchProjects();
+      projects.value = res.projects;
+    } catch {
+      // ignore
+    } finally {
+      loadingProjects.value = false;
+    }
+  }
 }
 
-function dirDisplay() {
+function selectProject(path: string) {
+  appStore.setProjectDir(path);
+  showProjectPicker.value = false;
+}
+
+function clearProject() {
+  appStore.setProjectDir("");
+  showProjectPicker.value = false;
+}
+
+function projectDisplay() {
   const dir = appStore.projectDir;
-  if (!dir) return 'No project';
-  // Show last 2 path segments
-  const parts = dir.replace(/\/+$/, '').split('/');
-  return parts.slice(-2).join('/');
+  if (!dir) return "Select project...";
+  const parts = dir.replace(/\/+$/, "").split("/");
+  return parts[parts.length - 1] || dir;
 }
 
 const selectedKey = computed(() => route.name as string);
@@ -330,24 +352,42 @@ function handleNav(key: string) {
       </button>
     </nav>
 
-    <!-- Project directory selector -->
-    <div class="project-dir">
-      <div v-if="!editingDir" class="dir-display" @click="editingDir = true; dirInput = appStore.projectDir" :title="appStore.projectDir || 'Click to set project directory'">
+    <!-- Project directory picker -->
+    <div class="project-picker">
+      <button class="picker-toggle" @click="openProjectPicker()" :title="appStore.projectDir || 'Select project'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
         </svg>
-        <span>{{ dirDisplay() }}</span>
-      </div>
-      <div v-else class="dir-edit">
-        <input
-          v-model="dirInput"
-          class="dir-input"
-          placeholder="~/projects/own/kristy"
-          @keyup.enter="saveDir()"
-          @keyup.escape="editingDir = false"
-          autofocus
-        />
-        <button class="dir-save" @click="saveDir()">OK</button>
+        <span class="picker-label">{{ projectDisplay() }}</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron" :class="{ open: showProjectPicker }">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+
+      <div v-if="showProjectPicker" class="picker-dropdown">
+        <div v-if="loadingProjects" class="picker-loading">Loading...</div>
+        <template v-else>
+          <button
+            class="picker-item none"
+            :class="{ active: !appStore.projectDir }"
+            @click="clearProject()"
+          >
+            <span>No project (home dir)</span>
+          </button>
+          <button
+            v-for="p in projects"
+            :key="p.path"
+            class="picker-item"
+            :class="{ active: appStore.projectDir === p.path }"
+            @click="selectProject(p.path)"
+            :title="p.path"
+          >
+            <svg v-if="p.hasGit" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="git-icon">
+              <circle cx="12" cy="12" r="4"/><line x1="1.05" y1="12" x2="7" y2="12"/><line x1="17.01" y1="12" x2="22.96" y2="12"/>
+            </svg>
+            <span>{{ p.name }}</span>
+          </button>
+        </template>
       </div>
     </div>
 
@@ -466,48 +506,87 @@ function handleNav(key: string) {
   }
 }
 
-.project-dir {
+.project-picker {
   padding: 8px 12px;
   border-top: 1px solid $border-color;
+  position: relative;
 
-  .dir-display {
+  .picker-toggle {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid $border-color;
     border-radius: $radius-sm;
+    background: #fff;
     cursor: pointer;
     font-size: 12px;
     color: $text-secondary;
-    transition: background $transition-fast;
-    &:hover { background: rgba($accent-primary, 0.06); }
-    span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    transition: all $transition-fast;
+
+    &:hover { border-color: $accent-primary; background: rgba($accent-primary, 0.03); }
+
+    .picker-label {
+      flex: 1;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chevron {
+      transition: transform 0.2s;
+      &.open { transform: rotate(180deg); }
+    }
   }
 
-  .dir-edit {
-    display: flex;
-    gap: 4px;
-  }
-
-  .dir-input {
-    flex: 1;
-    padding: 4px 8px;
-    border: 1px solid $border-color;
-    border-radius: $radius-sm;
-    font-size: 12px;
-    outline: none;
+  .picker-dropdown {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 12px;
+    right: 12px;
+    max-height: 320px;
+    overflow-y: auto;
     background: #fff;
-    &:focus { border-color: $accent-primary; }
+    border: 1px solid $border-color;
+    border-radius: $radius-md;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12);
+    z-index: 100;
   }
 
-  .dir-save {
-    padding: 4px 8px;
+  .picker-loading {
+    padding: 12px;
+    text-align: center;
+    color: $text-muted;
+    font-size: 12px;
+  }
+
+  .picker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 12px;
     border: none;
-    background: $accent-primary;
-    color: #fff;
-    border-radius: $radius-sm;
-    font-size: 11px;
+    background: none;
     cursor: pointer;
+    font-size: 12px;
+    color: $text-primary;
+    text-align: left;
+    transition: background $transition-fast;
+
+    &:hover { background: rgba($accent-primary, 0.06); }
+    &.active { background: rgba($accent-primary, 0.12); color: $accent-primary; font-weight: 500; }
+    &.none { color: $text-muted; font-style: italic; border-bottom: 1px solid rgba($border-color, 0.5); }
+
+    .git-icon { color: $accent-primary; flex-shrink: 0; }
+
+    span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 
