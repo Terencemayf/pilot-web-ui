@@ -49,10 +49,10 @@ function handleDrop(e: DragEvent) {
   for (const f of Array.from(e.dataTransfer?.files || [])) addFile(f)
 }
 
-async function uploadFiles(): Promise<{ name: string; path: string }[]> {
-  if (!attachments.value.length) return []
+async function uploadFiles(files: Attachment[]): Promise<{ name: string; path: string }[]> {
+  if (!files.length) return []
   const fd = new FormData()
-  for (const a of attachments.value) fd.append('file', a.file, a.name)
+  for (const a of files) fd.append('file', a.file, a.name)
   const token = localStorage.getItem('pilot_api_key') || ''
   const res = await fetch('/upload', { method: 'POST', body: fd, headers: token ? { Authorization: `Bearer ${token}` } : {} })
   if (!res.ok) throw new Error(`Upload failed: ${res.status}`)
@@ -132,7 +132,7 @@ async function send() {
   attachments.value = []
   try {
     if (currentAttachments.length) {
-      const uploaded = await uploadFiles()
+      const uploaded = await uploadFiles(currentAttachments)
       const paths = uploaded.map(f => `[File: ${f.name}](${f.path})`)
       inputText = inputText ? inputText + '\n\n' + paths.join('\n') : paths.join('\n')
     }
