@@ -25,7 +25,12 @@ export function usePipelineEvents(onEvent?: (e: PipelineEvent) => void) {
   function connect() {
     const proto = location.protocol === 'https:' ? 'wss:' : 'ws:'
     const token = getApiKey()
-    const url = `${proto}//${location.host}/api/pilot/pipeline/events${token ? `?token=${token}` : ''}`
+    const cwd = localStorage.getItem('pilot_project_dir') || ''
+    const params = new URLSearchParams()
+    if (token) params.set('token', token)
+    if (cwd) params.set('cwd', cwd)
+    const qs = params.toString()
+    const url = `${proto}//${location.host}/api/pilot/pipeline/events${qs ? `?${qs}` : ''}`
 
     ws = new WebSocket(url)
 

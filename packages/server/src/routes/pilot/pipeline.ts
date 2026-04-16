@@ -18,10 +18,9 @@ export const pipelineRoutes = new Router()
 
 // ── Helpers ────────────────────────────────────────────
 
-/** Resolve the .pilot/ directory for the current project. */
-function getPilotDir(): string {
-  // Check TERMINAL_CWD (set by pilot gateway) first, then cwd
-  const projectDir = process.env.TERMINAL_CWD || process.cwd()
+/** Resolve the .pilot/ directory — uses ?cwd= query param if provided. */
+function getPilotDir(cwd?: string): string {
+  const projectDir = cwd || process.env.TERMINAL_CWD || process.cwd()
   return resolve(projectDir, '.pilot')
 }
 
@@ -157,9 +156,9 @@ async function readScorecard(campaignDir: string): Promise<Record<string, unknow
 
 // ── Routes ─────────────────────────────────────────────
 
-/** GET /api/pilot/pipeline/campaigns — list all campaigns. */
+/** GET /api/pilot/pipeline/campaigns?cwd=/path/to/project — list all campaigns. */
 pipelineRoutes.get('/api/pilot/pipeline/campaigns', async (ctx) => {
-  const pilotDir = getPilotDir()
+  const pilotDir = getPilotDir(ctx.query.cwd as string)
 
   if (!existsSync(pilotDir)) {
     ctx.body = { campaigns: [], active: null }
@@ -194,15 +193,16 @@ pipelineRoutes.get('/api/pilot/pipeline/campaigns', async (ctx) => {
   ctx.body = { campaigns, active }
 })
 
-/** GET /api/pilot/pipeline/campaigns/:slug — single campaign detail. */
+/** GET /api/pilot/pipeline/campaigns/:slug?cwd= — single campaign detail. */
 pipelineRoutes.get('/api/pilot/pipeline/campaigns/:slug', async (ctx) => {
   const { slug } = ctx.params
-  const campaignPath = join(getPilotDir(), slug, 'campaign.md')
+  const pilotDir = getPilotDir(ctx.query.cwd as string)
+  const campaignPath = join(pilotDir, slug, 'campaign.md')
 
   try {
     const content = await readFile(campaignPath, 'utf-8')
     const campaign = parseCampaignMd(content, slug)
-    campaign.score = await readScore(join(getPilotDir(), slug))
+    campaign.score = await readScore(join(pilotDir, slug))
     ctx.body = campaign
   } catch {
     ctx.status = 404
@@ -210,10 +210,10 @@ pipelineRoutes.get('/api/pilot/pipeline/campaigns/:slug', async (ctx) => {
   }
 })
 
-/** GET /api/pilot/pipeline/campaigns/:slug/score — scorecard detail. */
+/** GET /api/pilot/pipeline/campaigns/:slug/score?cwd= — scorecard detail. */
 pipelineRoutes.get('/api/pilot/pipeline/campaigns/:slug/score', async (ctx) => {
   const { slug } = ctx.params
-  const scorecard = await readScorecard(join(getPilotDir(), slug))
+  const scorecard = await readScorecard(join(getPilotDir(ctx.query.cwd as string), slug))
 
   if (!scorecard) {
     ctx.status = 404
@@ -235,7 +235,7 @@ pipelineRoutes.delete('/api/pilot/pipeline/campaigns/:slug', async (ctx) => {
     return
   }
 
-  const campaignDir = join(getPilotDir(), slug)
+  const campaignDir = join(getPilotDir(ctx.query.cwd as string), slug)
   try {
     await rm(campaignDir, { recursive: true })
     ctx.body = { ok: true }

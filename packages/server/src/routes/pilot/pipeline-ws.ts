@@ -21,34 +21,35 @@ import { resolve, join } from 'path'
 import { homedir } from 'os'
 import { getToken } from '../../services/auth'
 
-const clients: WebSocket[] = []
-
-function getPilotDir(): string {
-  const projectDir = process.env.TERMINAL_CWD || process.cwd()
-  return resolve(projectDir, '.pilot')
+interface WsClient {
+  ws: WebSocket
+  cwd: string  // project dir this client is watching
 }
 
-/** Broadcast a JSON event to all connected clients. */
-function broadcast(event: Record<string, unknown>) {
+const clients: WsClient[] = []
+const watchers = new Map<string, ReturnType<typeof watch>>()
+
+/** Broadcast to clients watching a specific project dir. */
+function broadcast(cwd: string, event: Record<string, unknown>) {
   const msg = JSON.stringify(event)
-  clients.forEach((ws) => {
-    if (ws.readyState === WebSocket.OPEN) {
-      ws.send(msg)
+  clients.forEach((c) => {
+    if (c.cwd === cwd && c.ws.readyState === WebSocket.OPEN) {
+      c.ws.send(msg)
     }
   })
 }
 
-/** Watch .pilot/ for campaign.md changes and broadcast updates. */
-function startWatcher() {
-  const pilotDir = getPilotDir()
+/** Start watching a project's .pilot/ directory. */
+function ensureWatcher(cwd: string) {
+  if (watchers.has(cwd)) return
+
+  const pilotDir = resolve(cwd, '.pilot')
   if (!existsSync(pilotDir)) return
 
   try {
-    // Watch recursively for campaign.md changes
     const watcher = watch(pilotDir, { recursive: true }, async (eventType, filename) => {
       if (!filename || !filename.endsWith('campaign.md')) return
 
-      // Extract slug from path: {slug}/campaign.md
       const parts = filename.split('/')
       if (parts.length < 2) return
       const slug = parts[0]
@@ -57,12 +58,11 @@ function startWatcher() {
         const campaignPath = join(pilotDir, slug, 'campaign.md')
         const content = await readFile(campaignPath, 'utf-8')
 
-        // Quick-parse status and current phase from frontmatter
         const statusMatch = content.match(/^status:\s*(.+)/m)
         const phaseMatch = content.match(/^current_phase:\s*(.+)/m)
         const routeMatch = content.match(/^route:\s*(.+)/m)
 
-        broadcast({
+        broadcast(cwd, {
           type: 'campaign.update',
           slug,
           status: statusMatch?.[1]?.trim() || 'unknown',
@@ -70,9 +70,10 @@ function startWatcher() {
           route: routeMatch?.[1]?.trim() || 'STANDARD',
         })
       } catch {
-        // File may be mid-write — ignore
+        // File may be mid-write
       }
     })
+    watchers.set(cwd, watcher)
 
     // Clean up on process exit
     process.on('beforeExit', () => watcher.close())
@@ -83,7 +84,11 @@ function startWatcher() {
 
 /** Accept pushed events from the gateway/engine (internal use). */
 export function pushPipelineEvent(event: Record<string, unknown>) {
-  broadcast({ ...event, ts: new Date().toISOString() })
+  // Broadcast to all clients (no cwd filter for pushed events)
+  const msg = JSON.stringify({ ...event, ts: new Date().toISOString() })
+  clients.forEach((c) => {
+    if (c.ws.readyState === WebSocket.OPEN) c.ws.send(msg)
+  })
 }
 
 export function setupPipelineWebSocket(httpServer: HttpServer) {
@@ -103,19 +108,38 @@ export function setupPipelineWebSocket(httpServer: HttpServer) {
     }
 
     wss.handleUpgrade(req, socket, head, (ws) => {
-      wss.emit('connection', ws, req)
+      // Extract cwd from query param
+      const cwd = url.searchParams.get('cwd') || process.env.TERMINAL_CWD || homedir()
+      wss.emit('connection', ws, req, cwd)
     })
   })
 
-  wss.on('connection', (ws) => {
-    clients.push(ws)
-    ws.on('close', () => { const i = clients.indexOf(ws); if (i >= 0) clients.splice(i, 1) })
-    ws.on('error', () => { const i = clients.indexOf(ws); if (i >= 0) clients.splice(i, 1) })
+  wss.on('connection', (ws: WebSocket, _req: any, cwd: string) => {
+    const client: WsClient = { ws, cwd }
+    clients.push(client)
 
-    // Send initial state
-    ws.send(JSON.stringify({ type: 'connected', ts: new Date().toISOString() }))
+    // Start watching this project dir if not already
+    ensureWatcher(cwd)
+
+    const removeClient = () => {
+      const i = clients.indexOf(client)
+      if (i >= 0) clients.splice(i, 1)
+    }
+    ws.on('close', removeClient)
+    ws.on('error', removeClient)
+
+    // Client can switch project by sending { type: "watch", cwd: "..." }
+    ws.on('message', (data) => {
+      try {
+        const msg = JSON.parse(data.toString())
+        if (msg.type === 'watch' && msg.cwd) {
+          client.cwd = msg.cwd
+          ensureWatcher(msg.cwd)
+          ws.send(JSON.stringify({ type: 'watching', cwd: msg.cwd }))
+        }
+      } catch { /* ignore */ }
+    })
+
+    ws.send(JSON.stringify({ type: 'connected', cwd, ts: new Date().toISOString() }))
   })
-
-  // Start file watcher for campaign changes
-  startWatcher()
 }

@@ -40,22 +40,27 @@ export interface PipelineScorecard {
 
 // ── API calls ──────────────────────────────────────────
 
+function cwdParam(): string {
+  const dir = localStorage.getItem('pilot_project_dir') || ''
+  return dir ? `?cwd=${encodeURIComponent(dir)}` : ''
+}
+
 export async function listCampaigns(): Promise<PipelineListResponse> {
-  return request('/api/pilot/pipeline/campaigns')
+  return request(`/api/pilot/pipeline/campaigns${cwdParam()}`)
 }
 
 export async function getCampaign(slug: string): Promise<PipelineCampaign> {
-  return request(`/api/pilot/pipeline/campaigns/${slug}`)
+  return request(`/api/pilot/pipeline/campaigns/${slug}${cwdParam()}`)
 }
 
 export async function getScorecard(slug: string): Promise<PipelineScorecard | null> {
   try {
-    return await request(`/api/pilot/pipeline/campaigns/${slug}/score`)
+    return await request(`/api/pilot/pipeline/campaigns/${slug}/score${cwdParam()}`)
   } catch {
     return null
   }
 }
 
 export async function deleteCampaign(slug: string): Promise<void> {
-  return request(`/api/pilot/pipeline/campaigns/${slug}`, { method: 'DELETE' })
+  return request(`/api/pilot/pipeline/campaigns/${slug}${cwdParam()}`, { method: 'DELETE' })
 }
