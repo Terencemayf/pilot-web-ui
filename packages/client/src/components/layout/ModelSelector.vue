@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NSelect } from 'naive-ui'
-import { useAppStore } from '@/stores/hermes/app'
+import { useAppStore } from '@/stores/pilot/app'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

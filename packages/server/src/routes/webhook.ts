@@ -1,10 +1,10 @@
 import Router from '@koa/router'
-import { emitWebhook } from '../services/hermes'
+import { emitWebhook } from '../services/pilot'
 
 export const webhookRoutes = new Router()
 
 /**
- * POST /webhook — receive callbacks from Hermes Agent
+ * POST /webhook — receive callbacks from Pilot Agent
  *
  * Expected body:
  * {
@@ -13,7 +13,7 @@ export const webhookRoutes = new Router()
  *   "data": { ... }
  * }
  *
- * TODO: Add signature verification when Hermes supports webhook signing
+ * TODO: Add signature verification when Pilot supports webhook signing
  */
 webhookRoutes.post('/webhook', async (ctx) => {
   const payload = ctx.request.body

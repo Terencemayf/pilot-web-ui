@@ -6,14 +6,14 @@ import send from 'koa-send'
 import { resolve } from 'path'
 import { mkdir } from 'fs/promises'
 import { config } from './config'
-import { hermesRoutes, setupTerminalWebSocket, proxyMiddleware } from './routes/hermes'
+import { pilotRoutes, setupTerminalWebSocket, proxyMiddleware } from './routes/pilot'
 import { uploadRoutes } from './routes/upload'
 import { webhookRoutes } from './routes/webhook'
-import * as hermesCli from './services/hermes-cli'
+import * as pilotCli from './services/pilot-cli'
 import { getToken, authMiddleware } from './services/auth'
 
 const app = new Koa()
-const { restartGateway, startGateway, startGatewayBackground, getVersion } = hermesCli
+const { restartGateway, startGateway, startGatewayBackground, getVersion } = pilotCli
 
 let server: any = null
 let isShuttingDown = false
@@ -40,14 +40,14 @@ export async function bootstrap() {
 
   app.use(webhookRoutes.routes())
   app.use(uploadRoutes.routes())
-  app.use(hermesRoutes.routes())
+  app.use(pilotRoutes.routes())
   app.use(proxyMiddleware)
 
   // health
   app.use(async (ctx, next) => {
     if (ctx.path === '/health') {
       const raw = await getVersion()
-      const version = raw.split('\n')[0].replace('Hermes Agent ', '') || ''
+      const version = raw.split('\n')[0].replace('Pilot Agent ', '') || ''
 
       let gatewayOk = false
       try {
@@ -59,7 +59,7 @@ export async function bootstrap() {
 
       ctx.body = {
         status: gatewayOk ? 'ok' : 'error',
-        platform: 'hermes-agent',
+        platform: 'pilot-agent',
         version,
         gateway: gatewayOk ? 'running' : 'stopped',
       }
@@ -162,7 +162,7 @@ async function ensureApiServerConfig() {
   const { homedir } = await import('os')
   const { readFileSync, writeFileSync, existsSync, copyFileSync } = await import('fs')
   const yaml = (await import('js-yaml')).default
-  const configPath = resolve(homedir(), '.hermes/config.yaml')
+  const configPath = resolve(homedir(), '.pilot/config.yaml')
 
   const defaults: Record<string, any> = {
     enabled: true,

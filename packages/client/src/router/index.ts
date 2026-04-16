@@ -11,54 +11,59 @@ const router = createRouter({
       meta: { public: true },
     },
     {
-      path: '/hermes/chat',
-      name: 'hermes.chat',
-      component: () => import('@/views/hermes/ChatView.vue'),
+      path: '/pilot/chat',
+      name: 'pilot.chat',
+      component: () => import('@/views/pilot/ChatView.vue'),
     },
     {
-      path: '/hermes/jobs',
-      name: 'hermes.jobs',
-      component: () => import('@/views/hermes/JobsView.vue'),
+      path: '/pilot/jobs',
+      name: 'pilot.jobs',
+      component: () => import('@/views/pilot/JobsView.vue'),
     },
     {
-      path: '/hermes/models',
-      name: 'hermes.models',
-      component: () => import('@/views/hermes/ModelsView.vue'),
+      path: '/pilot/models',
+      name: 'pilot.models',
+      component: () => import('@/views/pilot/ModelsView.vue'),
     },
     {
-      path: '/hermes/logs',
-      name: 'hermes.logs',
-      component: () => import('@/views/hermes/LogsView.vue'),
+      path: '/pilot/logs',
+      name: 'pilot.logs',
+      component: () => import('@/views/pilot/LogsView.vue'),
     },
     {
-      path: '/hermes/usage',
-      name: 'hermes.usage',
-      component: () => import('@/views/hermes/UsageView.vue'),
+      path: '/pilot/usage',
+      name: 'pilot.usage',
+      component: () => import('@/views/pilot/UsageView.vue'),
     },
     {
-      path: '/hermes/skills',
-      name: 'hermes.skills',
-      component: () => import('@/views/hermes/SkillsView.vue'),
+      path: '/pilot/skills',
+      name: 'pilot.skills',
+      component: () => import('@/views/pilot/SkillsView.vue'),
     },
     {
-      path: '/hermes/memory',
-      name: 'hermes.memory',
-      component: () => import('@/views/hermes/MemoryView.vue'),
+      path: '/pilot/memory',
+      name: 'pilot.memory',
+      component: () => import('@/views/pilot/MemoryView.vue'),
     },
     {
-      path: '/hermes/settings',
-      name: 'hermes.settings',
-      component: () => import('@/views/hermes/SettingsView.vue'),
+      path: '/pilot/settings',
+      name: 'pilot.settings',
+      component: () => import('@/views/pilot/SettingsView.vue'),
     },
     {
-      path: '/hermes/channels',
-      name: 'hermes.channels',
-      component: () => import('@/views/hermes/ChannelsView.vue'),
+      path: '/pilot/channels',
+      name: 'pilot.channels',
+      component: () => import('@/views/pilot/ChannelsView.vue'),
     },
     {
-      path: '/hermes/terminal',
-      name: 'hermes.terminal',
-      component: () => import('@/views/hermes/TerminalView.vue'),
+      path: '/pilot/pipeline',
+      name: 'pilot.pipeline',
+      component: () => import('@/views/pilot/PipelineView.vue'),
+    },
+    {
+      path: '/pilot/terminal',
+      name: 'pilot.terminal',
+      component: () => import('@/views/pilot/TerminalView.vue'),
     },
   ],
 })
@@ -68,7 +73,7 @@ router.beforeEach((to, _from, next) => {
   if (to.meta.public) {
     // Already has key, skip login
     if (to.name === 'login' && hasApiKey()) {
-      next({ path: '/hermes/chat' })
+      next({ path: '/pilot/chat' })
       return
     }
     next()

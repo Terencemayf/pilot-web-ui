@@ -1,8 +1,8 @@
-# CLAUDE.md — Hermes Web UI Development Guide
+# CLAUDE.md — Pilot Web UI Development Guide
 
 ## Project Overview
 
-Hermes Web UI is a web dashboard for [Hermes Agent](https://github.com/EKKOLearnAI/hermes-web-ui), a multi-platform AI chat system. It provides session management, scheduled jobs, usage analytics, model configuration, channel management (Telegram, Discord, Slack, WhatsApp, etc.), an integrated terminal, and a streaming chat interface.
+Pilot Web UI is a web dashboard for [Pilot Agent](https://github.com/EKKOLearnAI/pilot-web-ui), a multi-platform AI chat system. It provides session management, scheduled jobs, usage analytics, model configuration, channel management (Telegram, Discord, Slack, WhatsApp, etc.), an integrated terminal, and a streaming chat interface.
 
 The project is designed for **multi-agent extensibility** — Hermes is the first agent integration. All agent-specific code is namespaced under `hermes/` directories, so future agents can be added alongside without conflicts.
 
@@ -32,8 +32,8 @@ npm run preview       # Preview production build with Vite
 ## Project Structure
 
 ```
-hermes-web-ui/
-├── bin/                          # CLI entry point (bin/hermes-web-ui.mjs)
+pilot-web-ui/
+├── bin/                          # CLI entry point (bin/pilot-web-ui.mjs)
 ├── dist/                         # Build output
 │   ├── client/                   # Vite frontend build
 │   └── server/                   # tsc server build
@@ -83,7 +83,7 @@ hermes-web-ui/
 │   │           ├── ChannelsView.vue
 │   │           └── TerminalView.vue
 │   ├── server/src/               # Koa BFF server
-│   │   ├── routes/hermes/        # Route modules
+│   │   ├── routes/pilot/        # Route modules
 │   │   │   ├── index.ts          # Aggregates all hermes sub-routers
 │   │   │   ├── sessions.ts       # Session CRUD (wraps hermes CLI)
 │   │   │   ├── profiles.ts       # Profile management (wraps hermes CLI)
@@ -98,7 +98,7 @@ hermes-web-ui/
 │   │   │   ├── upload.ts         # File upload
 │   │   │   └── webhook.ts        # Incoming webhooks
 │   │   ├── services/             # Business logic
-│   │   │   ├── hermes-cli.ts     # Hermes CLI wrapper (child_process.execFile)
+│   │   │   ├── pilot-cli.ts     # Hermes CLI wrapper (child_process.execFile)
 │   │   │   ├── auth.ts           # Auth middleware & token management
 │   │   │   └── hermes.ts         # Hermes gateway helpers
 │   │   ├── shared/providers.ts   # Provider model catalogs
@@ -120,12 +120,12 @@ All agent-specific code lives under `{agent-name}/` subdirectories. Hermes is th
 
 | Layer | Shared | Hermes |
 |-------|--------|--------|
-| API | `api/client.ts` | `api/hermes/*.ts` |
-| Components | `components/layout/` | `components/hermes/*/*.vue` |
-| Views | `views/LoginView.vue` | `views/hermes/*.vue` |
-| Stores | _(future: `stores/app.ts`)_ | `stores/hermes/*.ts` |
-| Routes | `path: '/'` (login) | `path: '/hermes/*'`, `name: 'hermes.*'` |
-| API paths | `/health`, `/upload`, `/webhook` | `/api/hermes/*` |
+| API | `api/client.ts` | `api/pilot/*.ts` |
+| Components | `components/layout/` | `components/pilot/*/*.vue` |
+| Views | `views/LoginView.vue` | `views/pilot/*.vue` |
+| Stores | _(future: `stores/app.ts`)_ | `stores/pilot/*.ts` |
+| Routes | `path: '/'` (login) | `path: '/pilot/*'`, `name: 'hermes.*'` |
+| API paths | `/health`, `/upload`, `/webhook` | `/api/pilot/*` |
 
 When adding a new agent, create a new directory at each layer following the same pattern.
 
@@ -133,7 +133,7 @@ When adding a new agent, create a new directory at each layer following the same
 
 - **Shared routes:** `login`
 - **Agent routes:** `{agent}.{page}` — e.g., `hermes.chat`, `hermes.jobs`
-- **Route paths:** `/hermes/{page}` — e.g., `/hermes/chat`, `/hermes/jobs`
+- **Route paths:** `/pilot/{page}` — e.g., `/pilot/chat`, `/pilot/jobs`
 
 ---
 
@@ -148,7 +148,7 @@ All components use `<script setup lang="ts">` with the Composition API:
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { NButton, NModal, useMessage } from 'naive-ui'
-import { someApi } from '@/api/hermes/something'
+import { someApi } from '@/api/pilot/something'
 
 const { t } = useI18n()
 const message = useMessage()
@@ -213,7 +213,7 @@ export const useMyStore = defineStore('myStore', () => {
 })
 ```
 
-Existing stores in `packages/client/src/stores/hermes/`: `app`, `chat`, `jobs`, `models`, `settings`, `usage`.
+Existing stores in `packages/client/src/stores/pilot/`: `app`, `chat`, `jobs`, `models`, `settings`, `usage`.
 
 ### API Layer
 
@@ -224,7 +224,7 @@ Agent-specific API modules live in `api/{agent}/`. The shared base `api/client.t
 - `getBaseUrlValue()` — configurable server URL from `localStorage`
 
 ```ts
-// packages/client/src/api/hermes/sessions.ts
+// packages/client/src/api/pilot/sessions.ts
 import { request } from '../client'
 
 export async function fetchSessions(source?: string, limit?: number): Promise<SessionSummary[]> {
@@ -232,14 +232,14 @@ export async function fetchSessions(source?: string, limit?: number): Promise<Se
   if (source) params.set('source', source)
   if (limit) params.set('limit', String(limit))
   const query = params.toString()
-  const res = await request<{ sessions: SessionSummary[] }>(`/api/hermes/sessions${query ? `?${query}` : ''}`)
+  const res = await request<{ sessions: SessionSummary[] }>(`/api/pilot/sessions${query ? `?${query}` : ''}`)
   return res.sessions
 }
 ```
 
 **API path rules:**
-- Local BFF endpoints: `/api/hermes/{resource}` — handled by Koa routes, call Hermes CLI directly
-- Gateway proxy endpoints: `/api/hermes/v1/*`, `/api/hermes/jobs/*` — forwarded to upstream Hermes gateway
+- Local BFF endpoints: `/api/pilot/{resource}` — handled by Koa routes, call Hermes CLI directly
+- Gateway proxy endpoints: `/api/pilot/v1/*`, `/api/pilot/jobs/*` — forwarded to upstream Hermes gateway
 - Shared endpoints: `/health`, `/upload`, `/webhook` — no agent prefix
 
 ### i18n
@@ -250,7 +250,7 @@ Two locales: `en.ts` and `zh.ts` in `packages/client/src/i18n/locales/`. Flat ne
 // en.ts
 export default {
   chat: {
-    emptyState: 'Start a conversation with Hermes Agent',
+    emptyState: 'Start a conversation with Pilot Agent',
     inputPlaceholder: 'Type a message...',
     sessions: 'Sessions',
     // ...
@@ -281,9 +281,9 @@ Hash-based routing (`createWebHashHistory`). All routes use lazy imports. Auth g
 ```ts
 // Agent route example
 {
-  path: '/hermes/chat',
+  path: '/pilot/chat',
   name: 'hermes.chat',
-  component: () => import('@/views/hermes/ChatView.vue'),
+  component: () => import('@/views/pilot/ChatView.vue'),
 }
 ```
 
@@ -298,23 +298,23 @@ The server bootstraps in `bootstrap()`:
 2. Sets up auth middleware (if token exists)
 3. Ensures Hermes gateway is running (auto-starts if needed)
 4. Registers CORS, body parser, all route modules
-5. Registers proxy middleware (catches unmatched `/api/hermes/*` and `/v1/*`)
+5. Registers proxy middleware (catches unmatched `/api/pilot/*` and `/v1/*`)
 6. Serves static SPA files with fallback to `index.html`
 7. Attaches WebSocket handler for terminal
 
 ### Route Modules
 
-Each route module exports a `Router` instance, aggregated in `routes/hermes/index.ts`:
+Each route module exports a `Router` instance, aggregated in `routes/pilot/index.ts`:
 
 ```ts
-// packages/server/src/routes/hermes/sessions.ts
+// packages/server/src/routes/pilot/sessions.ts
 import Router from '@koa/router'
-import * as hermesCli from '../../services/hermes-cli'
+import * as pilotCli from '../../services/pilot-cli'
 
 export const sessionRoutes = new Router()
 
-sessionRoutes.get('/api/hermes/sessions', async (ctx) => {
-  const sessions = await hermesCli.listSessions()
+sessionRoutes.get('/api/pilot/sessions', async (ctx) => {
+  const sessions = await pilotCli.listSessions()
   ctx.body = { sessions }
 })
 ```
@@ -326,14 +326,14 @@ sessionRoutes.get('/api/hermes/sessions', async (ctx) => {
 
 ### Reverse Proxy
 
-Unmatched `/api/hermes/*` and `/v1/*` requests are forwarded to the upstream Hermes gateway (`http://127.0.0.1:8642`). Path rewriting in `proxy-handler.ts`:
+Unmatched `/api/pilot/*` and `/v1/*` requests are forwarded to the upstream Hermes gateway (`http://127.0.0.1:8642`). Path rewriting in `proxy-handler.ts`:
 
-- `/api/hermes/v1/*` → `/v1/*` (upstream uses `/v1/` prefix)
-- `/api/hermes/*` → `/api/*` (upstream uses `/api/` prefix)
+- `/api/pilot/v1/*` → `/v1/*` (upstream uses `/v1/` prefix)
+- `/api/pilot/*` → `/api/*` (upstream uses `/api/` prefix)
 
-The proxy is implemented as both a route (`proxyRoutes.all('/api/hermes/{*any}', proxy)`) and a middleware (`proxyMiddleware`) registered on the main app to catch any requests that slip through route matching.
+The proxy is implemented as both a route (`proxyRoutes.all('/api/pilot/{*any}', proxy)`) and a middleware (`proxyMiddleware`) registered on the main app to catch any requests that slip through route matching.
 
-### Hermes CLI Wrapper (`packages/server/src/services/hermes-cli.ts`)
+### Hermes CLI Wrapper (`packages/server/src/services/pilot-cli.ts`)
 
 All Hermes interactions go through `child_process.execFile('hermes', [...args])`. Each function wraps a CLI subcommand:
 
@@ -375,9 +375,9 @@ CLI subcommands wrapped: `sessions export/delete/rename`, `profile list/show/cre
 Chat uses Server-Sent Events via `EventSource`:
 
 ```ts
-// packages/client/src/api/hermes/chat.ts
+// packages/client/src/api/pilot/chat.ts
 export function streamRunEvents(runId, onEvent, onDone, onError) {
-  const url = `${baseUrl}/api/hermes/v1/runs/${runId}/events?token=...`
+  const url = `${baseUrl}/api/pilot/v1/runs/${runId}/events?token=...`
   const source = new EventSource(url)
 
   source.onmessage = (e) => {
@@ -395,7 +395,7 @@ Auth token is passed via query parameter since `EventSource` does not support cu
 
 ### WebSocket Terminal
 
-Terminal uses a raw WebSocket at `/api/hermes/terminal` with JSON control messages:
+Terminal uses a raw WebSocket at `/api/pilot/terminal` with JSON control messages:
 
 - Client sends: `{ type: "create" }`, `{ type: "switch", sessionId }`, `{ type: "close", sessionId }`, `{ type: "resize", cols, rows }`
 - Client sends raw strings as keyboard input to the active PTY session
@@ -426,22 +426,22 @@ No test framework is currently configured. The intention is to add tests in the 
 
 ### Add a new Hermes page
 
-1. Create view component in `packages/client/src/views/hermes/MyView.vue`
-2. Add route in `packages/client/src/router/index.ts` with name `hermes.myPage` and path `/hermes/my-page`
+1. Create view component in `packages/client/src/views/pilot/MyView.vue`
+2. Add route in `packages/client/src/router/index.ts` with name `hermes.myPage` and path `/pilot/my-page`
 3. Add sidebar entry in `packages/client/src/components/layout/AppSidebar.vue` with `handleNav('hermes.myPage')`
 4. Add i18n keys to both `en.ts` and `zh.ts`
 
 ### Add a new Hermes API endpoint
 
-1. Add the route handler in `packages/server/src/routes/hermes/` (new or existing module)
-2. If it calls Hermes CLI, add a wrapper function in `packages/server/src/services/hermes-cli.ts`
-3. Register the route in `packages/server/src/routes/hermes/index.ts` via `hermesRoutes.use(myRoutes.routes())`
-4. Add the frontend API function in `packages/client/src/api/hermes/`
-5. If the endpoint should be proxied to the upstream gateway (not handled locally), ensure the path starts with `/api/hermes/` — the `proxyMiddleware` will catch it automatically
+1. Add the route handler in `packages/server/src/routes/pilot/` (new or existing module)
+2. If it calls Hermes CLI, add a wrapper function in `packages/server/src/services/pilot-cli.ts`
+3. Register the route in `packages/server/src/routes/pilot/index.ts` via `hermesRoutes.use(myRoutes.routes())`
+4. Add the frontend API function in `packages/client/src/api/pilot/`
+5. If the endpoint should be proxied to the upstream gateway (not handled locally), ensure the path starts with `/api/pilot/` — the `proxyMiddleware` will catch it automatically
 
 ### Add a new Hermes Pinia store
 
-1. Create `packages/client/src/stores/hermes/myFeature.ts` using setup syntax
+1. Create `packages/client/src/stores/pilot/myFeature.ts` using setup syntax
 2. Export `useMyFeatureStore` from the module
 
 ### Add a new agent integration

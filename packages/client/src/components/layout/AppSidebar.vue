@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
-import { useAppStore } from "@/stores/hermes/app";
+import { useAppStore } from "@/stores/pilot/app";
 import ModelSelector from "./ModelSelector.vue";
 import LanguageSwitch from "./LanguageSwitch.vue";
 import danceVideo from "@/assets/dance.mp4";
@@ -67,17 +67,17 @@ function handleNav(key: string) {
 
 <template>
   <aside class="sidebar" :class="{ open: appStore.sidebarOpen }">
-    <div class="sidebar-logo" @click="router.push('/hermes/chat')">
-      <img src="/logo.png" alt="Hermes" class="logo-img" />
-      <span class="logo-text">Hermes</span>
+    <div class="sidebar-logo" @click="router.push('/pilot/chat')">
+      <img src="/logo.png" alt="Pilot" class="logo-img" />
+      <span class="logo-text">Pilot</span>
       <canvas ref="canvasRef" class="logo-dance" />
     </div>
 
     <nav class="sidebar-nav">
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.chat' }"
-        @click="handleNav('hermes.chat')"
+        :class="{ active: selectedKey === 'pilot.chat' }"
+        @click="handleNav('pilot.chat')"
       >
         <svg
           width="16"
@@ -98,8 +98,19 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.jobs' }"
-        @click="handleNav('hermes.jobs')"
+        :class="{ active: selectedKey === 'pilot.pipeline' }"
+        @click="handleNav('pilot.pipeline')"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+        </svg>
+        <span>Pipeline</span>
+      </button>
+
+      <button
+        class="nav-item"
+        :class="{ active: selectedKey === 'pilot.jobs' }"
+        @click="handleNav('pilot.jobs')"
       >
         <svg
           width="16"
@@ -121,8 +132,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.models' }"
-        @click="handleNav('hermes.models')"
+        :class="{ active: selectedKey === 'pilot.models' }"
+        @click="handleNav('pilot.models')"
       >
         <svg
           width="16"
@@ -149,8 +160,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.channels' }"
-        @click="handleNav('hermes.channels')"
+        :class="{ active: selectedKey === 'pilot.channels' }"
+        @click="handleNav('pilot.channels')"
       >
         <svg
           width="16"
@@ -169,8 +180,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.skills' }"
-        @click="handleNav('hermes.skills')"
+        :class="{ active: selectedKey === 'pilot.skills' }"
+        @click="handleNav('pilot.skills')"
       >
         <svg
           width="16"
@@ -191,8 +202,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.memory' }"
-        @click="handleNav('hermes.memory')"
+        :class="{ active: selectedKey === 'pilot.memory' }"
+        @click="handleNav('pilot.memory')"
       >
         <svg
           width="16"
@@ -213,8 +224,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.logs' }"
-        @click="handleNav('hermes.logs')"
+        :class="{ active: selectedKey === 'pilot.logs' }"
+        @click="handleNav('pilot.logs')"
       >
         <svg
           width="16"
@@ -239,8 +250,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.usage' }"
-        @click="handleNav('hermes.usage')"
+        :class="{ active: selectedKey === 'pilot.usage' }"
+        @click="handleNav('pilot.usage')"
       >
         <svg
           width="16"
@@ -261,8 +272,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.terminal' }"
-        @click="handleNav('hermes.terminal')"
+        :class="{ active: selectedKey === 'pilot.terminal' }"
+        @click="handleNav('pilot.terminal')"
       >
         <svg
           width="16"
@@ -282,8 +293,8 @@ function handleNav(key: string) {
 
       <button
         class="nav-item"
-        :class="{ active: selectedKey === 'hermes.settings' }"
-        @click="handleNav('hermes.settings')"
+        :class="{ active: selectedKey === 'pilot.settings' }"
+        @click="handleNav('pilot.settings')"
       >
         <svg
           width="16"
@@ -325,7 +336,7 @@ function handleNav(key: string) {
         <LanguageSwitch />
       </div>
       <div class="version-info">
-        Hermes {{ appStore.serverVersion || "v0.1.0" }}
+        Pilot {{ appStore.serverVersion || "v0.1.0" }}
       </div>
     </div>
   </aside>

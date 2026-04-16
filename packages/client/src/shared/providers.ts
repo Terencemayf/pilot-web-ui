@@ -1,6 +1,6 @@
 /**
  * Provider registry — single source of truth for both frontend and backend.
- * Synced from hermes-agent hermes_cli/models.py _PROVIDER_MODELS.
+ * Synced from pilot-agent pilot_cli/models.py _PROVIDER_MODELS.
  */
 
 export interface ProviderPreset {

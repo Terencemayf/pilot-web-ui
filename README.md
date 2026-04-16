@@ -1,33 +1,33 @@
 <p align="center">
-  <strong>Hermes Web UI</strong>
+  <strong>Pilot Web UI</strong>
   <a href="./README_zh.md">中文</a>
 </p>
 
 <p align="center">
-  A full-featured web dashboard for <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a>.<br/>
+  A full-featured web dashboard for <a href="https://github.com/NousResearch/pilot-agent">Pilot Agent</a>.<br/>
   Manage AI chat sessions, monitor usage & costs, configure platform channels,<br/>
   schedule cron jobs, browse skills — all from a clean, responsive web interface.
 </p>
 
 <p align="center">
-  <code>npm install -g hermes-web-ui && hermes-web-ui start</code>
+  <code>npm install -g pilot-web-ui && pilot-web-ui start</code>
 </p>
 
 <p align="center">
-  <img src="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/packages/client/src/assets/output.gif" alt="Hermes Web UI Demo" width="680"/>
+  <img src="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/packages/client/src/assets/output.gif" alt="Pilot Web UI Demo" width="680"/>
 </p>
 
 <p align="center">
   <strong>Mobile</strong>
 </p>
 <p align="center">
-  <video src="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/packages/client/src/assets/video.mp4?raw=true" width="360" controls></video>
+  <video src="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/packages/client/src/assets/video.mp4?raw=true" width="360" controls></video>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/hermes-web-ui"><img src="https://img.shields.io/npm/v/hermes-web-ui?style=flat-square&color=blue" alt="npm version"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/hermes-web-ui?style=flat-square" alt="license"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-web-ui/stargazers"><img src="https://img.shields.io/github/stars/EKKOLearnAI/hermes-web-ui?style=flat-square" alt="stars"/></a>
+  <a href="https://www.npmjs.com/package/pilot-web-ui"><img src="https://img.shields.io/npm/v/pilot-web-ui?style=flat-square&color=blue" alt="npm version"/></a>
+  <a href="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/pilot-web-ui?style=flat-square" alt="license"/></a>
+  <a href="https://github.com/EKKOLearnAI/pilot-web-ui/stargazers"><img src="https://img.shields.io/github/stars/EKKOLearnAI/pilot-web-ui?style=flat-square" alt="stars"/></a>
 </p>
 
 ---
@@ -42,7 +42,7 @@
 - Markdown rendering with syntax highlighting and code copy
 - Tool call detail expansion (arguments / result)
 - File upload support
-- Global model selector — discovers models from `~/.hermes/auth.json` credential pool
+- Global model selector — discovers models from `~/.pilot/auth.json` credential pool
 - Per-session model display badge and context token usage
 
 ### Platform Channels
@@ -60,8 +60,8 @@ Unified configuration for **8 platforms** in one page:
 | WeChat | QR code login (scan in browser, auto-save credentials) |
 | WeCom | Bot ID / Secret |
 
-- Credential management writes to `~/.hermes/.env`
-- Channel behavior settings write to `~/.hermes/config.yaml`
+- Credential management writes to `~/.pilot/.env`
+- Channel behavior settings write to `~/.pilot/config.yaml`
 - Auto gateway restart on config change
 - Per-platform configured/unconfigured status detection
 
@@ -81,7 +81,7 @@ Unified configuration for **8 platforms** in one page:
 
 ### Model Management
 
-- Auto-discover models from credential pool (`~/.hermes/auth.json`)
+- Auto-discover models from credential pool (`~/.pilot/auth.json`)
 - Fetch available models from each provider endpoint (`/v1/models`)
 - Add custom OpenAI-compatible providers
 - Provider-level model grouping
@@ -121,47 +121,47 @@ Unified configuration for **8 platforms** in one page:
 ### npm (Recommended)
 
 ```bash
-npm install -g hermes-web-ui
-hermes-web-ui start
+npm install -g pilot-web-ui
+pilot-web-ui start
 ```
 
 Open **http://localhost:8648**
 
 ### One-line Setup (Auto-detect OS)
 
-Automatically installs Node.js (if missing) and hermes-web-ui on Debian/Ubuntu/macOS:
+Automatically installs Node.js (if missing) and pilot-web-ui on Debian/Ubuntu/macOS:
 
 ```bash
-bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/hermes-web-ui@main/scripts/setup.sh)
+bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/pilot-web-ui@main/scripts/setup.sh)
 ```
 
 ### WSL
 
 ```bash
-bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/hermes-web-ui@main/scripts/setup.sh)
-hermes-web-ui start
+bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/pilot-web-ui@main/scripts/setup.sh)
+pilot-web-ui start
 ```
 
-> WSL auto-detects and uses `hermes gateway run` for background startup (no launchd/systemd).
+> WSL auto-detects and uses `pilot gateway run` for background startup (no launchd/systemd).
 
 ### CLI Commands
 
 | Command | Description |
 |---|---|
-| `hermes-web-ui start` | Start in background (daemon mode) |
-| `hermes-web-ui start --port 9000` | Start on custom port |
-| `hermes-web-ui stop` | Stop background process |
-| `hermes-web-ui restart` | Restart background process |
-| `hermes-web-ui status` | Check if running |
-| `hermes-web-ui update` | Update to latest version & restart |
-| `hermes-web-ui -v` | Show version number |
-| `hermes-web-ui -h` | Show help message |
+| `pilot-web-ui start` | Start in background (daemon mode) |
+| `pilot-web-ui start --port 9000` | Start on custom port |
+| `pilot-web-ui stop` | Stop background process |
+| `pilot-web-ui restart` | Restart background process |
+| `pilot-web-ui status` | Check if running |
+| `pilot-web-ui update` | Update to latest version & restart |
+| `pilot-web-ui -v` | Show version number |
+| `pilot-web-ui -h` | Show help message |
 
 ### Auto Configuration
 
 On startup the BFF server automatically:
 
-- Validates `~/.hermes/config.yaml` and fills missing `api_server` fields
+- Validates `~/.pilot/config.yaml` and fills missing `api_server` fields
 - Backs up original config to `config.yaml.bak` if modified
 - Detects and starts the gateway if needed
 - Resolves port conflicts (kills stale processes)
@@ -172,8 +172,8 @@ On startup the BFF server automatically:
 ## Development
 
 ```bash
-git clone https://github.com/EKKOLearnAI/hermes-web-ui.git
-cd hermes-web-ui
+git clone https://github.com/EKKOLearnAI/pilot-web-ui.git
+cd pilot-web-ui
 npm install
 npm run dev
 ```
@@ -192,8 +192,8 @@ Browser → BFF (Koa, :8648) → Hermes Gateway (:8642)
                 ↓
            Hermes CLI (sessions, logs, version)
                 ↓
-           ~/.hermes/config.yaml  (channel behavior)
-           ~/.hermes/auth.json    (credential pool)
+           ~/.pilot/config.yaml  (channel behavior)
+           ~/.pilot/auth.json    (credential pool)
            Tencent iLink API      (WeChat QR login)
 ```
 

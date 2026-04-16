@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# hermes-web-ui environment check & auto-setup
+# pilot-web-ui environment check & auto-setup
 # Usage: bash setup.sh
 
 RED='\033[0;31m'
@@ -62,13 +62,13 @@ check_npm() {
     return 1
 }
 
-check_hermes() {
-    if command -v hermes &>/dev/null; then
-        info "Hermes Agent found: $(hermes --version 2>/dev/null | head -1)"
+check_pilot() {
+    if command -v pilot &>/dev/null; then
+        info "Pilot Agent found: $(pilot --version 2>/dev/null | head -1)"
         return 0
     fi
-    warn "Hermes Agent CLI not found"
-    echo "    Install it from: https://github.com/NousResearch/hermes-agent"
+    warn "Pilot Agent CLI not found"
+    echo "    Install it from: https://github.com/NousResearch/pilot-agent"
     return 1
 }
 
@@ -83,7 +83,7 @@ check_port() {
 }
 
 echo ""
-echo "  hermes-web-ui — Environment Setup"
+echo "  pilot-web-ui — Environment Setup"
 echo "  =================================="
 echo ""
 
@@ -93,20 +93,20 @@ check_node   || has_error=1
 echo ""
 check_npm    || has_error=1
 echo ""
-check_hermes || has_error=1
+check_pilot || has_error=1
 echo ""
 check_port
 
 echo ""
 if [ $has_error -eq 0 ]; then
-    # Auto-install hermes-web-ui if not already installed
-    if ! command -v hermes-web-ui &>/dev/null; then
-        warn "hermes-web-ui not installed, installing globally..."
-        npm install -g hermes-web-ui
-        info "hermes-web-ui installed"
+    # Auto-install pilot-web-ui if not already installed
+    if ! command -v pilot-web-ui &>/dev/null; then
+        warn "pilot-web-ui not installed, installing globally..."
+        npm install -g pilot-web-ui
+        info "pilot-web-ui installed"
     fi
     echo ""
-    info "All checks passed! Run: hermes-web-ui start"
+    info "All checks passed! Run: pilot-web-ui start"
 else
     warn "Some checks failed. Please fix the issues above."
 fi

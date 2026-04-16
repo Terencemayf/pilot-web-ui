@@ -5,7 +5,7 @@ import { NConfigProvider, NMessageProvider, NDialogProvider, NNotificationProvid
 import { themeOverrides } from '@/styles/theme'
 import AppSidebar from '@/components/layout/AppSidebar.vue'
 import { useKeyboard } from '@/composables/useKeyboard'
-import { useAppStore } from '@/stores/hermes/app'
+import { useAppStore } from '@/stores/pilot/app'
 
 const appStore = useAppStore()
 const route = useRoute()

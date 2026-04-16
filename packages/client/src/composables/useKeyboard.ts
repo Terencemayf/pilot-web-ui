@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useChatStore } from '@/stores/hermes/chat'
+import { useChatStore } from '@/stores/pilot/chat'
 
 export function useKeyboard() {
   const router = useRouter()
@@ -16,7 +16,7 @@ export function useKeyboard() {
 
     if (mod && e.key === 'j') {
       e.preventDefault()
-      router.push({ name: 'hermes.jobs' })
+      router.push({ name: 'pilot.jobs' })
     }
 
     if (e.key === 'Escape') {

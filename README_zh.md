@@ -1,20 +1,20 @@
 <p align="center">
-  <strong>Hermes Web UI</strong>
+  <strong>Pilot Web UI</strong>
   <a href="./README.md">English</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> 的全功能 Web 管理面板。<br/>
+  <a href="https://github.com/NousResearch/pilot-agent">Pilot Agent</a> 的全功能 Web 管理面板。<br/>
   管理 AI 聊天会话、监控用量与成本、配置平台渠道、<br/>
   管理定时任务、浏览技能 —— 全部在一个简洁响应式的 Web 界面中完成。
 </p>
 
 <p align="center">
-  <code>npm install -g hermes-web-ui && hermes-web-ui start</code>
+  <code>npm install -g pilot-web-ui && pilot-web-ui start</code>
 </p>
 
 <p align="center">
-  <img src="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/packages/client/src/assets/output.gif" alt="Hermes Web UI 演示" width="680"/>
+  <img src="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/packages/client/src/assets/output.gif" alt="Pilot Web UI 演示" width="680"/>
 </p>
 
 <p align="center">
@@ -22,13 +22,13 @@
 </p>
 
 <p align="center">
-  <video src="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/packages/client/src/assets/video.mp4?raw=true" width="360" controls></video>
+  <video src="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/packages/client/src/assets/video.mp4?raw=true" width="360" controls></video>
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/hermes-web-ui"><img src="https://img.shields.io/npm/v/hermes-web-ui?style=flat-square&color=blue" alt="npm 版本"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-web-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/hermes-web-ui?style=flat-square" alt="许可证"/></a>
-  <a href="https://github.com/EKKOLearnAI/hermes-web-ui/stargazers"><img src="https://img.shields.io/github/stars/EKKOLearnAI/hermes-web-ui?style=flat-square" alt="Star"/></a>
+  <a href="https://www.npmjs.com/package/pilot-web-ui"><img src="https://img.shields.io/npm/v/pilot-web-ui?style=flat-square&color=blue" alt="npm 版本"/></a>
+  <a href="https://github.com/EKKOLearnAI/pilot-web-ui/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/pilot-web-ui?style=flat-square" alt="许可证"/></a>
+  <a href="https://github.com/EKKOLearnAI/pilot-web-ui/stargazers"><img src="https://img.shields.io/github/stars/EKKOLearnAI/pilot-web-ui?style=flat-square" alt="Star"/></a>
 </p>
 
 ---
@@ -43,7 +43,7 @@
 - Markdown 渲染，支持语法高亮和代码复制
 - 工具调用详情展开（参数 / 结果）
 - 文件上传支持
-- 全局模型选择器 — 自动从 `~/.hermes/auth.json` 凭证池发现可用模型
+- 全局模型选择器 — 自动从 `~/.pilot/auth.json` 凭证池发现可用模型
 - 每个会话显示模型标签和上下文 Token 用量
 
 ### 平台渠道
@@ -61,8 +61,8 @@
 | 微信 | 扫码登录（浏览器扫码，自动保存凭证） |
 | 企业微信 | Bot ID / Secret |
 
-- 凭证管理写入 `~/.hermes/.env`
-- 渠道行为设置写入 `~/.hermes/config.yaml`
+- 凭证管理写入 `~/.pilot/.env`
+- 渠道行为设置写入 `~/.pilot/config.yaml`
 - 配置变更后自动重启网关
 - 每个平台已配置/未配置状态检测
 
@@ -82,7 +82,7 @@
 
 ### 模型管理
 
-- 从凭证池自动发现模型（`~/.hermes/auth.json`）
+- 从凭证池自动发现模型（`~/.pilot/auth.json`）
 - 从每个 Provider 端点获取可用模型（`/v1/models`）
 - 添加自定义 OpenAI 兼容 Provider
 - Provider 级别模型分组
@@ -122,47 +122,47 @@
 ### npm 安装（推荐）
 
 ```bash
-npm install -g hermes-web-ui
-hermes-web-ui start
+npm install -g pilot-web-ui
+pilot-web-ui start
 ```
 
 打开 **http://localhost:8648**
 
 ### 一键安装（自动检测系统）
 
-自动安装 Node.js（如未安装）和 hermes-web-ui，支持 Debian/Ubuntu/macOS：
+自动安装 Node.js（如未安装）和 pilot-web-ui，支持 Debian/Ubuntu/macOS：
 
 ```bash
-bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/hermes-web-ui@main/scripts/setup.sh)
+bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/pilot-web-ui@main/scripts/setup.sh)
 ```
 
 ### WSL
 
 ```bash
-bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/hermes-web-ui@main/scripts/setup.sh)
-hermes-web-ui start
+bash <(curl -fsSL https://cdn.jsdelivr.net/gh/EKKOLearnAI/pilot-web-ui@main/scripts/setup.sh)
+pilot-web-ui start
 ```
 
-> WSL 会自动检测并使用 `hermes gateway run` 进行后台启动（无需 launchd/systemd）。
+> WSL 会自动检测并使用 `pilot gateway run` 进行后台启动（无需 launchd/systemd）。
 
 ### CLI 命令
 
 | 命令 | 说明 |
 |---|---|
-| `hermes-web-ui start` | 后台启动（守护进程模式） |
-| `hermes-web-ui start --port 9000` | 自定义端口启动 |
-| `hermes-web-ui stop` | 停止后台进程 |
-| `hermes-web-ui restart` | 重启后台进程 |
-| `hermes-web-ui status` | 查看运行状态 |
-| `hermes-web-ui update` | 更新到最新版本并重启 |
-| `hermes-web-ui -v` | 显示版本号 |
-| `hermes-web-ui -h` | 显示帮助信息 |
+| `pilot-web-ui start` | 后台启动（守护进程模式） |
+| `pilot-web-ui start --port 9000` | 自定义端口启动 |
+| `pilot-web-ui stop` | 停止后台进程 |
+| `pilot-web-ui restart` | 重启后台进程 |
+| `pilot-web-ui status` | 查看运行状态 |
+| `pilot-web-ui update` | 更新到最新版本并重启 |
+| `pilot-web-ui -v` | 显示版本号 |
+| `pilot-web-ui -h` | 显示帮助信息 |
 
 ### 自动配置
 
 启动时 BFF 服务器会自动：
 
-- 校验 `~/.hermes/config.yaml` 并补全缺失的 `api_server` 字段
+- 校验 `~/.pilot/config.yaml` 并补全缺失的 `api_server` 字段
 - 修改时备份原配置到 `config.yaml.bak`
 - 检测并启动网关（如未运行）
 - 解决端口冲突（清理残留进程）
@@ -173,8 +173,8 @@ hermes-web-ui start
 ## 开发
 
 ```bash
-git clone https://github.com/EKKOLearnAI/hermes-web-ui.git
-cd hermes-web-ui
+git clone https://github.com/EKKOLearnAI/pilot-web-ui.git
+cd pilot-web-ui
 npm install
 npm run dev
 ```
@@ -193,8 +193,8 @@ npm run build   # 构建输出到 dist/
                 ↓
            Hermes CLI (会话、日志、版本)
                 ↓
-           ~/.hermes/config.yaml  (渠道行为配置)
-           ~/.hermes/auth.json    (凭证池)
+           ~/.pilot/config.yaml  (渠道行为配置)
+           ~/.pilot/auth.json    (凭证池)
            腾讯 iLink API         (微信扫码登录)
 ```
 

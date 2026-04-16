@@ -15,7 +15,7 @@ const loading = ref(false);
 const errorMsg = ref("");
 // If already has a key, try to go to main page
 if (hasApiKey()) {
-  router.replace("/hermes/chat");
+  router.replace("/pilot/chat");
 }
 
 async function handleLogin() {
@@ -41,7 +41,7 @@ async function handleLogin() {
     }
 
     setApiKey(key);
-    router.replace("/hermes/chat");
+    router.replace("/pilot/chat");
   } catch {
     errorMsg.value = t("login.connectionFailed");
   } finally {
@@ -54,7 +54,7 @@ async function handleLogin() {
   <div class="login-view">
     <div class="login-card">
       <div class="login-logo">
-        <img src="/logo.png" alt="Hermes" width="80" height="80" />
+        <img src="/logo.png" alt="Pilot" width="80" height="80" />
       </div>
       <h1 class="login-title">{{ t('login.title') }}</h1>
       <p class="login-desc">{{ t("login.description") }}</p>

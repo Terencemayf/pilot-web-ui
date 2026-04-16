@@ -1,7 +1,7 @@
 export default {
   // Login
   login: {
-    title: 'Hermes Web UI',
+    title: 'Pilot Web UI',
     description: 'Enter your access token to continue. Find it in the server startup logs.',
     placeholder: 'Access token',
     submit: 'Login',
@@ -36,6 +36,7 @@ export default {
   // Sidebar
   sidebar: {
     chat: 'Chat',
+    pipeline: 'Pipeline',
     jobs: 'Jobs',
     models: 'Models',
     skills: 'Skills',
@@ -51,7 +52,7 @@ export default {
 
   // Chat
   chat: {
-    emptyState: 'Start a conversation with Hermes Agent',
+    emptyState: 'Start a conversation with Pilot Agent',
     inputPlaceholder: 'Type a message... (Enter to send, Shift+Enter for new line)',
     attachFiles: 'Attach files',
     stop: 'Stop',
@@ -336,7 +337,7 @@ export default {
     waEnabled: 'Enable WhatsApp',
     waEnabledHint: 'Enable WhatsApp via QR code pairing',
     weixinToken: 'Weixin Token',
-    weixinTokenHint: 'From weixin CLI QR login (hermes weixin)',
+    weixinTokenHint: 'From weixin CLI QR login (pilot weixin)',
     accountId: 'Account ID',
     accountIdHint: 'Weixin account ID',
     qrLogin: 'QR Login',

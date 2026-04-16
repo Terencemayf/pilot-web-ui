@@ -1,7 +1,7 @@
 export default {
   // 登录
   login: {
-    title: 'Hermes Web UI',
+    title: 'Pilot Web UI',
     description: '输入访问令牌以继续。令牌在服务端启动日志中查看。',
     placeholder: '访问令牌',
     submit: '登录',
@@ -36,6 +36,7 @@ export default {
   // 侧边栏
   sidebar: {
     chat: '对话',
+    pipeline: '流水线',
     jobs: '任务',
     models: '模型',
     skills: '技能',
@@ -51,7 +52,7 @@ export default {
 
   // 对话
   chat: {
-    emptyState: '开始与 Hermes Agent 对话',
+    emptyState: '开始与 Pilot Agent 对话',
     inputPlaceholder: '输入消息... (Enter 发送，Shift+Enter 换行)',
     attachFiles: '添加附件',
     stop: '停止',
@@ -336,7 +337,7 @@ export default {
     waEnabled: '启用 WhatsApp',
     waEnabledHint: '通过二维码配对启用 WhatsApp',
     weixinToken: '微信 Token',
-    weixinTokenHint: '通过 weixin CLI 扫码登录获取 (hermes weixin)',
+    weixinTokenHint: '通过 weixin CLI 扫码登录获取 (pilot weixin)',
     accountId: 'Account ID',
     accountIdHint: '微信 Account ID',
     qrLogin: '扫码登录',

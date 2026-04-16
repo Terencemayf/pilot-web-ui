@@ -14,7 +14,7 @@ const options = computed(() =>
 
 function handleChange(val: string) {
   locale.value = val
-  localStorage.setItem('hermes_locale', val)
+  localStorage.setItem('pilot_locale', val)
 }
 </script>
 

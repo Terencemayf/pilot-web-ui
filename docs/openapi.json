@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Hermes Web UI API",
-    "description": "BFF server API for Hermes Web UI — chat sessions, platform channels, model management, skills, memory, logs, and terminal.",
+    "title": "Pilot Web UI API",
+    "description": "BFF server API for Pilot Web UI — chat sessions, platform channels, model management, skills, memory, logs, and terminal.",
     "version": "0.2.6"
   },
   "servers": [
@@ -38,7 +38,7 @@
         }
       }
     },
-    "/api/hermes/sessions": {
+    "/api/pilot/sessions": {
       "get": {
         "tags": ["Sessions"],
         "summary": "List sessions",
@@ -57,7 +57,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/sessions/{id}": {
+    "/api/pilot/sessions/{id}": {
       "get": {
         "tags": ["Sessions"],
         "summary": "Get session detail",
@@ -86,7 +86,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/sessions/{id}/rename": {
+    "/api/pilot/sessions/{id}/rename": {
       "post": {
         "tags": ["Sessions"],
         "summary": "Rename session",
@@ -119,7 +119,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config": {
+    "/api/pilot/config": {
       "get": {
         "tags": ["Config"],
         "summary": "Get configuration",
@@ -149,7 +149,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config/credentials": {
+    "/api/pilot/config/credentials": {
       "put": {
         "tags": ["Credentials"],
         "summary": "Save platform credentials",
@@ -164,12 +164,12 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/available-models": {
+    "/api/pilot/available-models": {
       "get": {
         "tags": ["Models"],
         "summary": "Fetch available models",
         "operationId": "getAvailableModels",
-        "description": "Fetches models from all credential pool endpoints in ~/.hermes/auth.json",
+        "description": "Fetches models from all credential pool endpoints in ~/.pilot/auth.json",
         "responses": {
           "200": { "description": "Model list", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/AvailableModelsResponse" } } } },
           "401": { "$ref": "#/components/responses/Unauthorized" },
@@ -178,7 +178,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config/models": {
+    "/api/pilot/config/models": {
       "get": {
         "tags": ["Models"],
         "summary": "Get model config",
@@ -191,7 +191,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config/model": {
+    "/api/pilot/config/model": {
       "put": {
         "tags": ["Models"],
         "summary": "Update default model",
@@ -206,7 +206,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config/providers": {
+    "/api/pilot/config/providers": {
       "post": {
         "tags": ["Models"],
         "summary": "Add custom provider",
@@ -221,7 +221,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/config/providers/{poolKey}": {
+    "/api/pilot/config/providers/{poolKey}": {
       "delete": {
         "tags": ["Models"],
         "summary": "Delete provider",
@@ -237,7 +237,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/skills": {
+    "/api/pilot/skills": {
       "get": {
         "tags": ["Skills"],
         "summary": "List all skills",
@@ -250,7 +250,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/skills/toggle": {
+    "/api/pilot/skills/toggle": {
       "put": {
         "tags": ["Skills"],
         "summary": "Toggle skill enabled state",
@@ -265,7 +265,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/skills/{category}/{skill}/files": {
+    "/api/pilot/skills/{category}/{skill}/files": {
       "get": {
         "tags": ["Skills"],
         "summary": "List skill files",
@@ -282,7 +282,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/skills/{path}": {
+    "/api/pilot/skills/{path}": {
       "get": {
         "tags": ["Skills"],
         "summary": "Read skill file",
@@ -297,7 +297,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/memory": {
+    "/api/pilot/memory": {
       "get": {
         "tags": ["Memory"],
         "summary": "Read memory files",
@@ -322,7 +322,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/logs": {
+    "/api/pilot/logs": {
       "get": {
         "tags": ["Logs"],
         "summary": "List log files",
@@ -334,7 +334,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/logs/{name}": {
+    "/api/pilot/logs/{name}": {
       "get": {
         "tags": ["Logs"],
         "summary": "Read log file",
@@ -354,7 +354,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles": {
+    "/api/pilot/profiles": {
       "get": {
         "tags": ["Profiles"],
         "summary": "List all profiles",
@@ -380,7 +380,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles/active": {
+    "/api/pilot/profiles/active": {
       "put": {
         "tags": ["Profiles"],
         "summary": "Switch active profile",
@@ -396,7 +396,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles/import": {
+    "/api/pilot/profiles/import": {
       "post": {
         "tags": ["Profiles"],
         "summary": "Import profile from archive",
@@ -411,7 +411,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles/{name}": {
+    "/api/pilot/profiles/{name}": {
       "get": {
         "tags": ["Profiles"],
         "summary": "Get profile details",
@@ -440,7 +440,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles/{name}/rename": {
+    "/api/pilot/profiles/{name}/rename": {
       "post": {
         "tags": ["Profiles"],
         "summary": "Rename a profile",
@@ -456,7 +456,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/profiles/{name}/export": {
+    "/api/pilot/profiles/{name}/export": {
       "post": {
         "tags": ["Profiles"],
         "summary": "Export profile to archive",
@@ -471,7 +471,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/terminal": {
+    "/api/pilot/terminal": {
       "get": {
         "tags": ["Terminal"],
         "summary": "WebSocket terminal connection",
@@ -486,7 +486,7 @@
         }
       }
     },
-    "/api/hermes/weixin/qrcode": {
+    "/api/pilot/weixin/qrcode": {
       "get": {
         "tags": ["Weixin"],
         "summary": "Fetch WeChat QR code",
@@ -499,7 +499,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/weixin/qrcode/status": {
+    "/api/pilot/weixin/qrcode/status": {
       "get": {
         "tags": ["Weixin"],
         "summary": "Poll QR scan status",
@@ -514,7 +514,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/weixin/save": {
+    "/api/pilot/weixin/save": {
       "post": {
         "tags": ["Weixin"],
         "summary": "Save WeChat credentials",
@@ -534,7 +534,7 @@
         "tags": ["Webhook"],
         "summary": "Receive webhook callbacks",
         "operationId": "receiveWebhook",
-        "description": "Receives webhook callbacks from Hermes Agent. No signature verification yet.",
+        "description": "Receives webhook callbacks from Pilot Agent. No signature verification yet.",
         "requestBody": { "required": true, "content": { "application/json": { "schema": { "$ref": "#/components/schemas/WebhookRequest" } } } },
         "responses": {
           "200": { "description": "Acknowledged", "content": { "application/json": { "schema": { "type": "object", "properties": { "ok": { "type": "boolean" } } } } } },
@@ -542,7 +542,7 @@
         }
       }
     },
-    "/api/hermes/{path}": {
+    "/api/pilot/{path}": {
       "x-forward-to": "Hermes upstream API",
       "get": {
         "tags": ["Proxy"],
@@ -595,7 +595,7 @@
         "security": [{ "BearerAuth": [] }]
       }
     },
-    "/api/hermes/v1/{path}": {
+    "/api/pilot/v1/{path}": {
       "get": {
         "tags": ["Proxy"],
         "summary": "Proxy v1 GET to upstream",
@@ -647,7 +647,7 @@
         "type": "object",
         "properties": {
           "status": { "type": "string", "enum": ["ok", "error"] },
-          "platform": { "type": "string", "example": "hermes-agent" },
+          "platform": { "type": "string", "example": "pilot-agent" },
           "version": { "type": "string" },
           "gateway": { "type": "string", "enum": ["running", "stopped"] }
         }
