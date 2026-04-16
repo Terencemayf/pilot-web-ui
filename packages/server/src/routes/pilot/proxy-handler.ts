@@ -17,10 +17,20 @@ export async function proxy(ctx: Context) {
     const lower = key.toLowerCase()
     if (lower === 'host') {
       headers['host'] = new URL(upstream).host
+    } else if (lower === 'authorization') {
+      // Replace BFF auth with gateway's API_SERVER_KEY
+      // The browser sends the BFF token, but the gateway expects its own key
+      continue  // Skip — we'll set the correct one below
     } else if (lower !== 'origin' && lower !== 'referer' && lower !== 'connection') {
       const v = Array.isArray(value) ? value[0] : value
       if (v) headers[key] = v
     }
+  }
+
+  // Inject gateway API key for upstream auth
+  const gatewayKey = config.gatewayApiKey
+  if (gatewayKey) {
+    headers['authorization'] = `Bearer ${gatewayKey}`
   }
 
   // Add SSE-friendly headers
