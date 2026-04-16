@@ -21,7 +21,7 @@ import { resolve, join } from 'path'
 import { homedir } from 'os'
 import { getToken } from '../../services/auth'
 
-const clients = new Set<WebSocket>()
+const clients: WebSocket[] = []
 
 function getPilotDir(): string {
   const projectDir = process.env.TERMINAL_CWD || process.cwd()
@@ -31,11 +31,11 @@ function getPilotDir(): string {
 /** Broadcast a JSON event to all connected clients. */
 function broadcast(event: Record<string, unknown>) {
   const msg = JSON.stringify(event)
-  for (const ws of clients) {
+  clients.forEach((ws) => {
     if (ws.readyState === WebSocket.OPEN) {
       ws.send(msg)
     }
-  }
+  })
 }
 
 /** Watch .pilot/ for campaign.md changes and broadcast updates. */
@@ -108,9 +108,9 @@ export function setupPipelineWebSocket(httpServer: HttpServer) {
   })
 
   wss.on('connection', (ws) => {
-    clients.add(ws)
-    ws.on('close', () => clients.delete(ws))
-    ws.on('error', () => clients.delete(ws))
+    clients.push(ws)
+    ws.on('close', () => { const i = clients.indexOf(ws); if (i >= 0) clients.splice(i, 1) })
+    ws.on('error', () => { const i = clients.indexOf(ws); if (i >= 0) clients.splice(i, 1) })
 
     // Send initial state
     ws.send(JSON.stringify({ type: 'connected', ts: new Date().toISOString() }))
