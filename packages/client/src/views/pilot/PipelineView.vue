@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { usePipelineStore } from '@/stores/pilot/pipeline'
+import { usePipelineEvents } from '@/composables/usePipelineEvents'
 import CampaignList from '@/components/pilot/pipeline/CampaignList.vue'
 import CampaignDetail from '@/components/pilot/pipeline/CampaignDetail.vue'
 
 const store = usePipelineStore()
+
+// Real-time updates via WebSocket
+const { connected } = usePipelineEvents((event) => {
+  if (event.type === 'campaign.update') {
+    // Refresh campaign list when any campaign changes
+    store.fetchCampaigns()
+    // If viewing this campaign, refresh detail too
+    if (event.slug && event.slug === store.selectedSlug) {
+      store.selectCampaign(event.slug)
+    }
+  }
+})
 
 onMounted(() => {
   store.fetchCampaigns()
@@ -14,7 +27,10 @@ onMounted(() => {
 <template>
   <div class="pipeline-view">
     <div class="pipeline-header">
-      <h2>Pipeline Dashboard</h2>
+      <h2>
+        Pipeline Dashboard
+        <span class="live-dot" v-if="connected" title="Live updates active"></span>
+      </h2>
       <div class="pipeline-stats" v-if="store.campaigns.length">
         <span class="stat">{{ store.campaigns.length }} campaigns</span>
         <span class="stat">{{ store.completedCampaigns.length }} completed</span>
@@ -60,7 +76,28 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
 
-  h2 { margin: 0; font-size: 20px; font-weight: 600; }
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
 
   .pipeline-stats {
     display: flex;

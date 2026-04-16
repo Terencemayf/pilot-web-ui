@@ -6,7 +6,7 @@ import send from 'koa-send'
 import { resolve } from 'path'
 import { mkdir } from 'fs/promises'
 import { config } from './config'
-import { pilotRoutes, setupTerminalWebSocket, proxyMiddleware } from './routes/pilot'
+import { pilotRoutes, setupTerminalWebSocket, setupPipelineWebSocket, proxyMiddleware } from './routes/pilot'
 import { uploadRoutes } from './routes/upload'
 import { webhookRoutes } from './routes/webhook'
 import * as pilotCli from './services/pilot-cli'
@@ -83,8 +83,9 @@ export async function bootstrap() {
   // 🚀 启动服务
   server = app.listen(config.port, '0.0.0.0')
 
-  // Terminal WebSocket (must be after server is created)
+  // WebSocket endpoints (must be after server is created)
   setupTerminalWebSocket(server)
+  setupPipelineWebSocket(server)
 
   server.on('listening', () => {
     console.log(`➜ Server: http://localhost:${config.port}`)
