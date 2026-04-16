@@ -61,6 +61,11 @@ const router = createRouter({
       component: () => import('@/views/pilot/PipelineView.vue'),
     },
     {
+      path: '/pilot/mission',
+      name: 'pilot.mission',
+      component: () => import('@/views/pilot/MissionControlView.vue'),
+    },
+    {
       path: '/pilot/terminal',
       name: 'pilot.terminal',
       component: () => import('@/views/pilot/TerminalView.vue'),
