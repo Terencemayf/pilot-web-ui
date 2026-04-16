@@ -349,6 +349,7 @@ export const useChatStore = defineStore('chat', () => {
         conversation_history: history,
         session_id: sid,
         model: sessionModel || undefined,
+        cwd: appStore.projectDir || undefined,
       })
 
       const runId = (run as any).run_id || (run as any).id

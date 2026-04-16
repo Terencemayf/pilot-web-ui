@@ -16,6 +16,18 @@ export const useAppStore = defineStore('app', () => {
   const sessionPersistence = ref(true)
   const maxTokens = ref(4096)
 
+  // Project directory — persisted in localStorage
+  const projectDir = ref(localStorage.getItem('pilot_project_dir') || '')
+
+  function setProjectDir(dir: string) {
+    projectDir.value = dir
+    if (dir) {
+      localStorage.setItem('pilot_project_dir', dir)
+    } else {
+      localStorage.removeItem('pilot_project_dir')
+    }
+  }
+
   async function checkConnection() {
     try {
       const res = await checkHealth()
@@ -80,6 +92,8 @@ export const useAppStore = defineStore('app', () => {
     streamEnabled,
     sessionPersistence,
     maxTokens,
+    projectDir,
+    setProjectDir,
     checkConnection,
     loadModels,
     switchModel,

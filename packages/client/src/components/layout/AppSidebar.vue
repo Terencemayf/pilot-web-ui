@@ -12,6 +12,21 @@ const route = useRoute();
 const router = useRouter();
 const appStore = useAppStore();
 const canvasRef = ref<HTMLCanvasElement>();
+const editingDir = ref(false);
+const dirInput = ref(appStore.projectDir);
+
+function saveDir() {
+  appStore.setProjectDir(dirInput.value.trim());
+  editingDir.value = false;
+}
+
+function dirDisplay() {
+  const dir = appStore.projectDir;
+  if (!dir) return 'No project';
+  // Show last 2 path segments
+  const parts = dir.replace(/\/+$/, '').split('/');
+  return parts.slice(-2).join('/');
+}
 
 const selectedKey = computed(() => route.name as string);
 
@@ -315,6 +330,27 @@ function handleNav(key: string) {
       </button>
     </nav>
 
+    <!-- Project directory selector -->
+    <div class="project-dir">
+      <div v-if="!editingDir" class="dir-display" @click="editingDir = true; dirInput = appStore.projectDir" :title="appStore.projectDir || 'Click to set project directory'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span>{{ dirDisplay() }}</span>
+      </div>
+      <div v-else class="dir-edit">
+        <input
+          v-model="dirInput"
+          class="dir-input"
+          placeholder="~/projects/own/kristy"
+          @keyup.enter="saveDir()"
+          @keyup.escape="editingDir = false"
+          autofocus
+        />
+        <button class="dir-save" @click="saveDir()">OK</button>
+      </div>
+    </div>
+
     <ModelSelector />
 
     <div class="sidebar-footer">
@@ -427,6 +463,51 @@ function handleNav(key: string) {
   &.active {
     background-color: rgba($accent-primary, 0.12);
     color: $accent-primary;
+  }
+}
+
+.project-dir {
+  padding: 8px 12px;
+  border-top: 1px solid $border-color;
+
+  .dir-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: $radius-sm;
+    cursor: pointer;
+    font-size: 12px;
+    color: $text-secondary;
+    transition: background $transition-fast;
+    &:hover { background: rgba($accent-primary, 0.06); }
+    span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
+
+  .dir-edit {
+    display: flex;
+    gap: 4px;
+  }
+
+  .dir-input {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid $border-color;
+    border-radius: $radius-sm;
+    font-size: 12px;
+    outline: none;
+    background: #fff;
+    &:focus { border-color: $accent-primary; }
+  }
+
+  .dir-save {
+    padding: 4px 8px;
+    border: none;
+    background: $accent-primary;
+    color: #fff;
+    border-radius: $radius-sm;
+    font-size: 11px;
+    cursor: pointer;
   }
 }
 
