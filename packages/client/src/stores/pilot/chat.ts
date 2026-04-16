@@ -424,6 +424,55 @@ export const useChatStore = defineStore('chat', () => {
               break
             }
 
+            case 'thinking': {
+              // Show CTO thinking as a subtle system message
+              const msgs = getSessionMsgs(sid)
+              const last = msgs[msgs.length - 1]
+              if (last?.role === 'system' && last.content.startsWith('💭')) {
+                // Update existing thinking message instead of creating new one
+                updateMessage(sid, last.id, { content: `💭 ${evt.text || ''}` })
+              } else {
+                if (last?.isStreaming) {
+                  updateMessage(sid, last.id, { isStreaming: false })
+                }
+                addMessage(sid, {
+                  id: uid(),
+                  role: 'system',
+                  content: `💭 ${evt.text || ''}`,
+                  timestamp: Date.now(),
+                })
+              }
+              break
+            }
+
+            case 'subagent.progress': {
+              // Show subagent tool activity
+              const msgs = getSessionMsgs(sid)
+              // Find running delegate_task tool message and update it
+              const delegateMsg = msgs.filter(
+                m => m.role === 'tool' && m.toolName === 'delegate_task' && m.toolStatus === 'running'
+              ).pop()
+              if (delegateMsg) {
+                const tools = (evt as any).tools || ''
+                updateMessage(sid, delegateMsg.id, {
+                  toolPreview: tools,
+                })
+              }
+              break
+            }
+
+            case 'reasoning.available': {
+              // Remove thinking message if present, reasoning is the real content
+              const msgs = getSessionMsgs(sid)
+              const thinkMsg = msgs.filter(m => m.role === 'system' && m.content.startsWith('💭')).pop()
+              if (thinkMsg) {
+                // Remove thinking bubble — real content coming via message.delta
+                const idx = msgs.indexOf(thinkMsg)
+                if (idx >= 0) msgs.splice(idx, 1)
+              }
+              break
+            }
+
             case 'run.completed': {
               const msgs = getSessionMsgs(sid)
               const lastMsg = msgs[msgs.length - 1]

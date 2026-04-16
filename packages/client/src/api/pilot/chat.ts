@@ -27,6 +27,9 @@ export interface RunEvent {
   tool?: string
   name?: string
   preview?: string
+  text?: string          // thinking / reasoning text
+  tools?: string         // subagent progress tool list
+  duration?: number
   timestamp?: number
   error?: string
 }

@@ -65,7 +65,10 @@ const formattedToolResult = computed(() => {
     <template v-if="message.role === 'tool'">
       <div
         class="tool-line"
-        :class="{ expandable: hasToolDetails }"
+        :class="{
+          expandable: hasToolDetails,
+          delegate: message.toolName === 'delegate_task',
+        }"
         @click="hasToolDetails && (toolExpanded = !toolExpanded)"
       >
         <svg
@@ -325,6 +328,17 @@ const formattedToolResult = computed(() => {
   color: $text-muted;
   padding: 2px 4px;
   border-radius: $radius-sm;
+
+  &.delegate {
+    background: rgba($accent-primary, 0.06);
+    border-left: 2px solid $accent-primary;
+    padding: 6px 8px;
+    margin: 2px 0;
+    color: $text-secondary;
+
+    .tool-name { color: $accent-primary; font-weight: 600; }
+    .tool-preview { color: $text-secondary; font-style: normal; }
+  }
 
   &.expandable {
     cursor: pointer;
